@@ -1,0 +1,86 @@
+﻿@model IEnumerable<Core3.Data.Entities.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Products</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th style="display:none"/>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Email)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td style="display:none">
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Email)
+            </td>
+            <td id="@item.Id">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" id="btnDelete">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<div id="confirmDialog" title="Delete Confirmation" hidden>
+    <p>Are you sure to delete the product</p>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            $('#a[id*=btnDelete]').click(function (e) {
+                debugger;
+                e.preventDefault();
+                var id = $(this).parent()[0].id;
+                $('#confirmDialog').data('id', id).dialog('open');
+            });
+
+            $("#confirmDialog").dialog({
+                autoOpen: false,
+                modal: true,
+                resizable: false,
+                buttons: {
+                    "Ok": function () {
+                        var id = $(this).data("id");
+                        window.location.href = '/Products/Delete/' + id;
+                    },
+                    "Cancel": function (e) {
+                        $(this).dialog("close");
+                    }
+                },
+            });
+        });
+    </script>
+}
